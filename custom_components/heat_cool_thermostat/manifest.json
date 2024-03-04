@@ -1,8 +1,8 @@
 {
-  "domain": "generic_thermostat",
-  "name": "Generic Thermostat",
+  "domain": "heat_cool_thermostat",
+  "name": "Heat Cool Thermostat",
   "codeowners": [],
   "dependencies": ["sensor", "switch"],
-  "documentation": "https://www.home-assistant.io/integrations/generic_thermostat",
+  "documentation": "https://github.com/xselvasx/Heat-Cool-Thermostat",
   "iot_class": "local_polling"
 }
