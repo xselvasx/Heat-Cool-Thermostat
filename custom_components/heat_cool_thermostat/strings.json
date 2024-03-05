@@ -2,7 +2,7 @@
   "services": {
     "reload": {
       "name": "[%key:common::action::reload%]",
-      "description": "Reloads Heat Cool thermostats from the YAML-configuration."
+      "description": "Reloads xsx thermostats from the YAML-configuration."
     }
   }
 }

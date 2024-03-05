@@ -1,8 +1,17 @@
 {
   "domain": "heat_cool_thermostat",
-  "name": "Heat Cool Thermostat",
-  "codeowners": [],
-  "dependencies": ["sensor", "switch"],
-  "documentation": "https://github.com/xselvasx/Heat-Cool-Thermostat",
-  "iot_class": "local_polling"
+  "name": "heat cool thermostat",
+  "codeowners": [
+    "@xselvasx"
+  ],
+  "dependencies": [
+    "climate",
+    "sensor",
+    "switch"
+  ],
+  "documentation": "https://github.com/xselvasx/Heat-Cool-Thermostat.git",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/xselvasx/Heat-Cool-Thermostat/issues",
+  "requirements": [],
+  "version": "0.0.1"
 }

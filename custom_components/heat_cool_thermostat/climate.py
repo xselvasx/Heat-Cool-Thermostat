@@ -1,8 +1,9 @@
-"""Adds support for heat cool thermostat units."""
+"""Adds support for heat_cool_thermostat units."""
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime, timedelta
+from datetime import timedelta
+import datetime
 import logging
 import math
 from typing import Any
@@ -132,7 +133,7 @@ async def async_setup_platform(
     name: str = config[CONF_NAME]
     heater_entity_id: str = config[CONF_HEATER]
     sensor_entity_id: str = config[CONF_SENSOR]
-	remote_off_entity_id: str | None = config.get(CONF_REMOTE_OFF)
+    remote_off_entity_id: str | None = config.get(CONF_REMOTE_OFF)
     min_temp: float | None = config.get(CONF_MIN_TEMP)
     max_temp: float | None = config.get(CONF_MAX_TEMP)
     target_temp: float | None = config.get(CONF_TARGET_TEMP)
@@ -217,7 +218,7 @@ class HeatCoolThermostat(ClimateEntity, RestoreEntity):
             self._attr_hvac_modes = [HVACMode.COOL, HVACMode.OFF]
         else:
             self._attr_hvac_modes = [HVACMode.HEAT, HVACMode.OFF]"""
-        self._attr_hvac_modes = [HVACMode.HEAT, HVACMode.COOL, HVACMode.OFF]		   																	
+        self._attr_hvac_modes = [HVACMode.HEAT, HVACMode.COOL, HVACMode.OFF]
         self._active = False
         self._cur_temp: float | None = None
         self._temp_lock = asyncio.Lock()
