@@ -211,6 +211,7 @@ class HeatCoolThermostat(ClimateEntity, RestoreEntity):
         self._hot_tolerance = hot_tolerance
         self._keep_alive = keep_alive
         self._hvac_mode = initial_hvac_mode
+        self._hvac_old_mode = initial_hvac_mode
         self._saved_target_temp = target_temp or next(iter(presets.values()), None)
         self._temp_precision = precision
         self._temp_target_temperature_step = target_temperature_step
@@ -260,6 +261,12 @@ class HeatCoolThermostat(ClimateEntity, RestoreEntity):
             self.async_on_remove(
                 async_track_time_interval(
                     self.hass, self._async_control_heating, self._keep_alive
+                )
+            )
+        if self.remote_off_entity_id is not None:
+            self.async_on_remove(
+                async_track_state_change_event(
+                    self.hass, [self.remote_off_entity_id], self._async_remote_off_changed
                 )
             )
 
@@ -375,6 +382,8 @@ class HeatCoolThermostat(ClimateEntity, RestoreEntity):
         return self._target_temp
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
+        """save the old state"""
+        self._hvac_old_mode = self._hvac_mode
         """Set hvac mode."""
         if hvac_mode == HVACMode.HEAT:
             self._hvac_mode = HVACMode.HEAT
@@ -452,6 +461,23 @@ class HeatCoolThermostat(ClimateEntity, RestoreEntity):
         if old_state is None:
             self.hass.create_task(self._check_switch_initial_state())
         self.async_write_ha_state()
+
+    @callback
+    async def _async_remote_off_changed(self, event: EventType[EventStateChangedData]) -> None:
+        """Handle remote off switch state changes."""
+        remote_new_state = event.data["new_state"]
+        remote_old_state = event.data["old_state"]
+        #_LOGGER.info("Heat-Cool-Thermostat remote_new_state: %s", remote_new_state.state)
+        #_LOGGER.info("Heat-Cool-Thermostat remote_old_state: %s", remote_old_state.state)
+        if remote_new_state is None:
+            return
+        if remote_new_state.state == "on":
+            """ stop the thermostat """
+            await self.async_set_hvac_mode(HVACMode.OFF)
+        else:
+            """thermostat should restart if in OFF mode"""
+            if self._hvac_mode == HVACMode.OFF:
+                await self.async_set_hvac_mode(self._hvac_old_mode)
 
     @callback
     def _async_update_temp(self, state: State) -> None:
